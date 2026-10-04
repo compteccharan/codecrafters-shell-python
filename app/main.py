@@ -36,7 +36,7 @@ def main():
             if os.path.isdir(path[0]):
                 os.chdir(path[0])
             else:
-                print(f"cd: {path}: No such file or directory")
+                print(f"cd: {path[0]}: No such file or directory")
 
         else:
             print(f"{command}: not found")
