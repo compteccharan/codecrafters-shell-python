@@ -28,7 +28,7 @@ def handle_type(func):
 
 def main():
     while True:
-        print("$ ")
+        sys.stdout.write("$ ")
         command = input()
         parsed_command = command.split()
         if parsed_command[0] == "exit":
