@@ -4,7 +4,7 @@ import shutil
 import os
 
 def main():
-    builtins = ["echo", "exit", "type", "pwd"]
+    builtins = ["echo", "exit", "type", "pwd", "cd"]
     while True:
         sys.stdout.write("$ ")
         sys.stdout.flush()
@@ -31,6 +31,13 @@ def main():
                 print(f"{command}: not found")
         elif command.startswith("pwd"):
             print(os.getcwd())
+        elif command.startswith("cd"):
+            path = command.split()[1:]
+            if os.path.isdir(path[0]):
+                os.chdir(path[0])
+            else:
+                print(f"cd: {path}: No such file or directory")
+
         else:
             print(f"{command}: not found")
 
