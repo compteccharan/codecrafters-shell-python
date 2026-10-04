@@ -17,22 +17,22 @@ def type_cmd(cmd):
         print(f"{cmd}: not found")
 
 def exec_cmd(cmd):
-    if path := shutil.which(cmd.split()[0]):
-        subprocess.call(cmd, shell=True)
+    parts = cmd.split()
+    if shutil.which(parts[0]):
+        subprocess.run(parts)
     else:
-        print(f"{cmd}: not found")
+        print(f"{parts[0]}: command not found")
 
 def pwd():
     print(os.getcwd())
 
-def cd(path):
-    if os.path.isdir(path[0]):
-        os.chdir(path[0])
-        # elif path[0] == "./":
-
-
+def cd(args):
+    target = args[0] if args else "~"
+    path = os.path.expanduser(target)
+    if os.path.isdir(path):
+        os.chdir(path)
     else:
-        print(f"cd: {path[0]}: No such file or directory")
+        print(f"cd: {target}: No such file or directory")
 
 
 def main():
@@ -43,24 +43,25 @@ def main():
             command = input()
         except EOFError:
             break
-        if command == "exit":
+
+        parts = command.split()
+        if not parts:
+            continue
+        name, args = parts[0], parts[1:]
+
+        if name == "exit":
             break
-        if command.startswith("echo "):
-            echo(command[5:])
-        elif command.startswith("type "):
-            cmd = command[5:]
-            type_cmd(cmd)
-        elif command.split()[0] not in builtins:
-            exec_cmd(command)
-        elif command.startswith("pwd"):
+        elif name == "echo":
+            echo(" ".join(args))
+        elif name == "type":
+            if args:
+                type_cmd(args[0])
+        elif name == "pwd":
             pwd()
-        elif command.startswith("cd"):
-            path = command.split()[1:]
-            cd(path)
-
+        elif name == "cd":
+            cd(args)
         else:
-            print(f"{command}: not found")
-
+            exec_cmd(command)
 
 if __name__ == "__main__":
     main()
