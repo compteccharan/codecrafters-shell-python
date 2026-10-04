@@ -27,8 +27,7 @@ def pwd():
 
 def cd(path):
     if os.path.isdir(path[0]):
-        if path[0].startswith("/"):
-            os.chdir(path[0])
+        os.chdir(path[0])
         # elif path[0] == "./":
 
 
