@@ -1,45 +1,37 @@
+import subprocess
 import sys
-import os
-from pathlib import Path
-
-
-builtins = ["echo", "exit", "type"]
-
-
-def handle_echo(args):
-    print(f"{' '.join(args)}")
-
-
-def handle_type(func):
-    if func in builtins:
-        print(f"{func} is a shell builtin")
-        return
-    for pathway in os.environ["PATH"].split(os.pathsep):
-        pathway = Path(pathway)
-        if not pathway.exists() or not pathway.is_dir():
-            continue
-        for file in Path(pathway).iterdir():
-            if file.name == func and file.is_file() and os.access(file, os.X_OK):
-                print(f"{func} is {file}")
-                return
-
-    print(f"{func} not found")
+import shutil
 
 
 def main():
+    builtins = ["echo", "exit", "type"]
     while True:
         sys.stdout.write("$ ")
-        command = input()
-        parsed_command = command.split()
-        if parsed_command[0] == "exit":
+        sys.stdout.flush()
+        try:
+            command = input()
+        except EOFError:
             break
-        if parsed_command[0] == "echo":
-            handle_echo(parsed_command[1:])
-            continue
-        if parsed_command[0] == "type":
-            handle_type(parsed_command[1])
-            continue
-        print(f"{command}: command not found")
+        if command == "exit":
+            break
+        if command.startswith("echo "):
+            print(f"{command[5:]}")
+        elif command.startswith("type "):
+            cmd = command[5:]
+            if cmd in builtins:
+                print(f"{cmd} is a shell builtin")
+            elif path := shutil.which(cmd):
+                print(f"{cmd} is {path}")
+            else:
+                print(f"{cmd}: not found")
+        elif command.split()[0] not in builtins:
+            if path := shutil.which(command.split()[0]):
+                subprocess.call(command, shell=True)
+            else:
+                print(f"{command}: not found")
+
+        else:
+            print(f"{command}: not found")
 
 
 if __name__ == "__main__":
