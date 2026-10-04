@@ -9,7 +9,7 @@ def main():
         command = input()
         if command == "exit":
             break
-        if command.startswith("echo"):
+        elif command.startswith("echo"):
             print(command[5:])
         print(f"{command}: command not found")
 
