@@ -1,7 +1,7 @@
 import subprocess
 import sys
 import shutil
-
+import os
 
 def main():
     builtins = ["echo", "exit", "type"]
@@ -29,7 +29,8 @@ def main():
                 subprocess.call(command, shell=True)
             else:
                 print(f"{command}: not found")
-
+        elif command.startswith("pwd"):
+            print(os.getcwd())
         else:
             print(f"{command}: not found")
 
