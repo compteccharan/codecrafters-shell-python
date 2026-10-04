@@ -7,12 +7,12 @@ builtins = ["echo", "exit", "type"]
 
 
 def handle_echo(args):
-    print(f"{' '.join(args)}\n")
+    print(f"{' '.join(args)}")
 
 
 def handle_type(func):
     if func in builtins:
-        print(f"{func} is a shell builtin\n")
+        print(f"{func} is a shell builtin")
         return
     for pathway in os.environ["PATH"].split(os.pathsep):
         pathway = Path(pathway)
@@ -20,10 +20,10 @@ def handle_type(func):
             continue
         for file in Path(pathway).iterdir():
             if file.name == func and file.is_file() and os.access(file, os.X_OK):
-                print(f"{func} is {file}\n")
+                print(f"{func} is {file}")
                 return
 
-    print(f"{func} not found\n")
+    print(f"{func} not found")
 
 
 def main():
@@ -39,7 +39,7 @@ def main():
         if parsed_command[0] == "type":
             handle_type(parsed_command[1])
             continue
-        print(f"{command}: command not found\n")
+        print(f"{command}: command not found")
 
 
 if __name__ == "__main__":
